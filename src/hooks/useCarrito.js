@@ -12,7 +12,6 @@ export default function useCarrito() {
         ...api,
 
         // Obtener carrito por ID de usuario
-        obtenerCarritoUsuario: (idUsuario) => api.get(`/usuario/${idUsuario}`),
 
         // Obtener un carrito por ID
         obtenerCarrito: (id) => api.get(`/${id}`),

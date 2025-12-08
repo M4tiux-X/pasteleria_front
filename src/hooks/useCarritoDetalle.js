@@ -1,7 +1,7 @@
 // src/hooks/useCarritoDetalle.js
 
 import useApi from "./useApi";
-const URL = "http://localhost:8087/api/carrto_detalle";
+const URL = "http://localhost:8087/api/carrito_detalle";
 
 export default function useCarritoDetalle() {
     const api = useApi(URL);
@@ -10,7 +10,6 @@ export default function useCarritoDetalle() {
         ...api,
 
         //  Obtiene todos los productos dentro de un carrito
-        obtenerDetallePorCarrito: (idCarrito) => api.get(`/carrito/${idCarrito}`),
 
         //  Agrega un producto al carrito
         agregarProducto: (body) => api.post("/", body),

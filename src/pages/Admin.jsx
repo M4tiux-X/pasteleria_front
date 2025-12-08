@@ -61,7 +61,7 @@ const Admin = () => {
           <ul className="lista-usuarios">
             {JSON.parse(localStorage.getItem("usuarios") || "[]").map((u, index) => (
               <li key={index}>
-                <a className='info-usuario'><i class="bi bi-person-circle"></i> {u.username} — <strong className>{u.role}</strong></a>
+                <a className='info-usuario'><i className="bi bi-person-circle"></i> {u.username} — <strong className="rol-ususario">{u.role}</strong></a>
               </li>
             ))}
           </ul>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import React from "react";
 import "../css/main.css";
 import useCarrito from "../hooks/useCarrito";
 import useCarritoDetalle from "../hooks/useCarritoDetalle";
@@ -16,12 +15,11 @@ const Carrito = () => {
     eliminarDetalle
   } = useCarritoDetalle();
 
-  const idUsuario = 1; // <-- debes reemplazar con usuario logeado
+  const idUsuario = 1;
 
   // =============================
   //   1. CARGAR CARRITO
   // =============================
-
   useEffect(() => {
     cargarCarrito();
   }, []);
@@ -31,17 +29,17 @@ const Carrito = () => {
       // Buscar carrito del usuario
       let res = await obtenerCarritoUsuario(idUsuario);
 
-      if (!res.data) {
-        // si no existe → crear
+      // si el backend NO devuelve carrito → viene null
+      if (!res) {
         const nuevo = await crearCarrito({ usuarioId: idUsuario });
-        res = { data: nuevo.data };
+        res = nuevo; // ← JSON completo de la creación
       }
 
-      setCarrito(res.data);
+      setCarrito(res);
 
-      // cargar sus detalles
-      const det = await obtenerDetallePorCarrito(res.data.id);
-      setDetalles(det.data || []);
+      // cargar detalles
+      const det = await obtenerDetallePorCarrito(res.id);
+      setDetalles(det || []);
 
     } catch (e) {
       console.error("Error cargando carrito:", e);
@@ -51,7 +49,6 @@ const Carrito = () => {
   // =============================
   //   2. SUMAR / RESTAR CANTIDAD
   // =============================
-
   const incrementar = async (idDetalle, cantidadActual) => {
     await actualizarCantidad(idDetalle, { cantidad: cantidadActual + 1 });
     cargarCarrito();
@@ -69,10 +66,8 @@ const Carrito = () => {
   // =============================
   //   3. ELIMINAR PRODUCTO
   // =============================
-
   const eliminarProducto = async (idDetalle) => {
     if (!window.confirm("¿Eliminar producto?")) return;
-
     await eliminarDetalle(idDetalle);
     cargarCarrito();
   };
@@ -80,7 +75,6 @@ const Carrito = () => {
   // =============================
   //   4. VACIAR CARRITO
   // =============================
-
   const vaciarCarrito = async () => {
     if (!window.confirm("¿Vaciar carrito?")) return;
 
@@ -94,7 +88,6 @@ const Carrito = () => {
   // =============================
   //   5. TOTAL
   // =============================
-
   const total = detalles.reduce(
     (acc, p) => acc + p.producto.precio * p.cantidad,
     0
@@ -103,14 +96,11 @@ const Carrito = () => {
   // =============================
   //   6. RENDER
   // =============================
-
   if (!carrito || detalles.length === 0) {
     return (
       <main>
         <h2 className="titulo-principal">Carrito</h2>
-        <p id="carrito-vacio">
-          Tu carrito está vacío 
-        </p>
+        <p id="carrito-vacio">Tu carrito está vacío</p>
       </main>
     );
   }
